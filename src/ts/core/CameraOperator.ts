@@ -34,6 +34,10 @@ export class CameraOperator implements IInputReceiver, IUpdatable
 
 	public characterCaller: Character;
 
+	public screenShakeIntensity: number = 0;
+	public screenShakeDuration: number = 0;
+	public screenShakeTimer: number = 0;
+
 	constructor(world: World, camera: THREE.Camera, sensitivityX: number = 1, sensitivityY: number = sensitivityX * 0.8)
 	{
 		this.world = world;
@@ -85,6 +89,13 @@ export class CameraOperator implements IInputReceiver, IUpdatable
 		this.phi = Math.min(85, Math.max(-85, this.phi));
 	}
 
+	public triggerScreenShake(intensity: number, duration: number): void
+	{
+		this.screenShakeIntensity = intensity;
+		this.screenShakeDuration = duration;
+		this.screenShakeTimer = duration;
+	}
+
 	public update(timeScale: number): void
 	{
 		if (this.followMode === true)
@@ -104,6 +115,18 @@ export class CameraOperator implements IInputReceiver, IUpdatable
 			this.camera.position.y = this.target.y + this.radius * Math.sin(this.phi * Math.PI / 180);
 			this.camera.position.z = this.target.z + this.radius * Math.cos(this.theta * Math.PI / 180) * Math.cos(this.phi * Math.PI / 180);
 			this.camera.updateMatrix();
+
+			if (this.screenShakeTimer > 0) {
+				this.screenShakeTimer -= timeScale;
+				const shakeAmount = this.screenShakeIntensity * (this.screenShakeTimer / this.screenShakeDuration);
+				const offsetX = (Math.random() - 0.5) * shakeAmount;
+				const offsetY = (Math.random() - 0.5) * shakeAmount;
+				this.camera.position.x += offsetX;
+				this.camera.position.y += offsetY;
+				if (this.screenShakeTimer <= 0) {
+					this.screenShakeIntensity = 0;
+				}
+			}
 			this.camera.lookAt(this.target);
 		}
 	}

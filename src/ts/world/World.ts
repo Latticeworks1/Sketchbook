@@ -515,6 +515,14 @@ export class World
 					</a>
 				</div>
 				<div class="left-panel">
+					<div id="nitro-bar-container" class="panel-segment">
+						<div style="display: flex; align-items: center; margin-bottom: 5px;">
+							<span style="color: white; margin-right: 10px;">Nitro:</span>
+							<div style="width: 150px; height: 15px; background-color: #555; border: 1px solid #000; flex-grow: 1;">
+								<div id="nitro-bar" style="width: 100%; height: 100%; background-color: #007bff;"></div>
+							</div>
+						</div>
+					</div>
 					<div id="controls" class="panel-segment flex-bottom"></div>
 				</div>
 			</div>

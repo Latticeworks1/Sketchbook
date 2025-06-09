@@ -13,8 +13,16 @@
 .left-panel .panel-segment {
 	flex-grow: 1;
 	flex-basis: 100px;
-	padding: 20px;
+	padding: 10px; /* Adjusted padding */
 	overflow: hidden;
+	margin-bottom: 10px; /* Add some space between panel segments */
+	background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background like other panels */
+}
+
+#nitro-bar-container span {
+	font-family: 'Cutive Mono', monospace; /* Match font if used by controls */
+	font-size: 1em;
+	color: white; /* Ensure span text is white, as it's directly in the panel */
 }
 
 .flex-bottom {
