@@ -30,7 +30,10 @@ export class Car extends Vehicle implements IControllable
 
 	// Nitro system
 	public nitroEnabled: boolean = false;
+	public nitroFuel: number = 100;
+	public maxNitroFuel: number = 100;
 	private nitroForceMultiplier: number = 1.5;
+	private nitroBarElement: HTMLElement;
 
 	constructor(gltf: any)
 	{
@@ -62,6 +65,7 @@ export class Car extends Vehicle implements IControllable
 		};
 
 		this.steeringSimulator = new SpringSimulator(60, 10, 0.6);
+		this.nitroBarElement = document.getElementById('nitro-bar');
 	}
 
 	public noDirectionPressed(): boolean
@@ -75,6 +79,20 @@ export class Car extends Vehicle implements IControllable
 	public update(timeStep: number): void
 	{
 		super.update(timeStep);
+
+		if (this.nitroEnabled && this.nitroFuel > 0) {
+			this.nitroFuel -= timeStep * 10;
+			if (this.nitroFuel < 0) this.nitroFuel = 0;
+			this.world.cameraOperator.triggerScreenShake(0.1, 0.1);
+		}
+
+		if (this.nitroFuel <= 0) {
+			this.nitroEnabled = false;
+		}
+
+		if (this.nitroBarElement) {
+			this.nitroBarElement.style.width = (this.nitroFuel / this.maxNitroFuel) * 100 + '%';
+		}
 
 		const tiresHaveContact = this.rayCastVehicle.numWheelsOnGround > 0;
 
@@ -235,7 +253,11 @@ export class Car extends Vehicle implements IControllable
 
 		const brakeForce = 1000000;
 
-		this.nitroEnabled = this.actions.nitro.isPressed;
+		if (this.actions.nitro.isPressed && this.nitroFuel > 0) {
+			this.nitroEnabled = true;
+		} else {
+			this.nitroEnabled = false;
+		}
 
 		if (this.actions.exitVehicle.justPressed) this.characterWantsToExit = true;
 		if (this.actions.exitVehicle.justReleased)
